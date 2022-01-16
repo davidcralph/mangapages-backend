@@ -1,22 +1,18 @@
-const config = require("../config.json");
-const fetch = require("node-fetch");
-
-const rateLimit = require("lambda-rate-limiter")({
-  interval: config.ratelimit_time * 1000,
-}).check;
+const fetch = require('node-fetch');
+const rateLimit = require('../struct/ratelimiter');
 
 module.exports = async (req, res) => {
   try {
-    await rateLimit(50, req.headers["x-real-ip"]);
+    await rateLimit(50, req.headers['x-real-ip']);
   } catch (error) {
     return res.status(429).send({
-      message: "Too many requests",
+      message: 'Too many requests',
     });
   }
 
   if (!req.query.slug) {
     return res.status(401).send({
-      message: "Input param required",
+      message: 'Input param required',
     });
   }
 
